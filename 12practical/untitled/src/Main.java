@@ -1,9 +1,12 @@
+//4574790 Ungweru Nyirenda
+//CSC211 Practical
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.util.Arrays;
 
 public class Main {
-
     // O(n^3):
     private static int mcs_ON3(int[] X) {
         int n = X.length;
@@ -146,9 +149,10 @@ public class Main {
                 {base + "^6", "...", "...", "...", "..."}
         };
 
-
+        //Store the counts of each method into cellsData
         for (int pow = 2; pow <= 6; pow++) {
             int N = (int) Math.pow(base, pow);
+            //generate a random array X of length N
             int[] X = newArray(N);
 
             int i = pow - 2;
@@ -162,6 +166,17 @@ public class Main {
 
         DefaultTableModel model = new DefaultTableModel(cellsData, columnNames);
         JTable table = new JTable(model);
+
+        TableColumnModel columnModel = table.getColumnModel();
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i = 0; i<5; i++) {
+            //Center each cell
+            columnModel.getColumn(i).setCellRenderer(centerRenderer);
+            columnModel.getColumn(i).setResizable(false);
+        }
 
         JFrame frame = new JFrame("");
         frame.add(new JScrollPane(table));
