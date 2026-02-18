@@ -1,5 +1,6 @@
 //4574790 Ungweru Nyirenda
 //CSC211 Practical
+//git repository: https://github.com/JoughnDough/CSC211-Practicals/.git
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
