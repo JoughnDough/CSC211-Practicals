@@ -1,3 +1,5 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.util.Arrays;
 
 public class Main {
@@ -133,14 +135,15 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        //The application NEVER finishes termination at base = 10 because the datasets become so huge that we'd need to wait till the end of the universe to
         int base = 2;
 
         String[][] cellsData = {
-                {base + "²", "...", "...", "...", "..."},
-                {base + "³", "...", "...", "...", "..."},
-                {base + "⁴", "...", "...", "...", "..."},
-                {base + "⁵", "...", "...", "...", "..."},
-                {base + "⁶", "...", "...", "...", "..."}
+                {base + "^2", "...", "...", "...", "..."},
+                {base + "^3", "...", "...", "...", "..."},
+                {base + "^4", "...", "...", "...", "..."},
+                {base + "^5", "...", "...", "...", "..."},
+                {base + "^6", "...", "...", "...", "..."}
         };
 
 
@@ -154,6 +157,17 @@ public class Main {
             cellsData[i][3] = Integer.toString(mcs_ON2B(X));
             cellsData[i][4] = Integer.toString(mcs_ON(X));
         }
+
+        String[] columnNames = {"N", "O(n^3)", "O(n^2) A", "O(n^2) B", "O(n)"};
+
+        DefaultTableModel model = new DefaultTableModel(cellsData, columnNames);
+        JTable table = new JTable(model);
+
+        JFrame frame = new JFrame("");
+        frame.add(new JScrollPane(table));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 
 }
