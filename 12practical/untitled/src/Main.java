@@ -98,4 +98,37 @@ public class Main {
 
         return count;
     }
+
+    //Generate a random integer from the range [start,end]
+    private static int randint(int start, int end) {
+        int range = start - end;
+
+        if (range == 0)
+            return start;
+        else
+            return start + (int) (Math.random() * range);
+    }
+
+    //generate a random array of length n
+    private static int[] newArray(int n) {
+        int[] X = new int[n];
+
+        int countPositive = 0;
+        int countNegative = 0;
+
+        for (int i = 0; i < n; i++) {
+            int x = randint(1, n) * (-1) ^ randint(2, 4);
+
+            if (x < 0)
+                countNegative += 1;
+            else
+                countPositive += 1;
+
+            X[i] = x;
+        }
+
+        System.out.println("Number of negative numbers in X: " + countNegative);
+        System.out.println("Number of positive numbers in X: " + countPositive);
+        return X;
+    }
 }
