@@ -88,6 +88,67 @@ public class Main {
         return count;
     }
 
+    //Part of O(n log(n))
+    private static int maxStraddle(int[] X, int low, int high){
+        if (low >= high)
+            return 0;
+        if (low == high)
+            return Math.max(0, X[low]);
+
+        int middle = (int) (low + high)/2;
+
+        int sum = 0;
+        int maxsofarLeft = 0;
+
+        for (int i = middle;  i >= low; i--){
+            sum += X[i];
+
+            if (sum > maxsofarLeft)
+                maxsofarLeft = sum;
+        }
+
+        int maxsofarRight = 0;
+        int N = X.length;
+
+        for (int i = middle + 1;  i <= high; i--){
+            if (i >= N)
+                break;
+
+            sum += X[i];
+
+            if (sum > maxsofarRight)
+                maxsofarRight = sum;
+        }
+
+        return maxsofarLeft + maxsofarRight;
+    }
+    //O(n log(n))
+    private static int mcsOnlogn(int[] X, int low, int high){
+        if (low >= high)
+            return 0;
+        if (low == high -1) {
+            if (low == X.length)
+                return 0;
+            return  Math.max(0, X[low]);
+        }
+
+        if (low == high - 2) {
+            int sum = 0;
+
+            for (int i = 0;i<X.length;i++)
+                sum += X[i];
+
+            return sum;
+        }
+
+        int middle = (int) (low + high)/ 2;
+        int mLeft = mcsOnlogn(X, low, middle);
+        int  mRight = mcsOnlogn(X, middle+1, high);
+        int mStraddle = maxStraddle(X, low, high);
+
+        //max(mLeft, mRight, mStraddle
+        return Math.max(Math.max(mLeft, mRight), mStraddle);
+    }
     //O(n)
     private static int mcs_ON(int[] X) {
         int N = X.length;
@@ -142,11 +203,11 @@ public class Main {
         int base = 2;
 
         String[][] cellsData = {
-                {base + "^2", "...", "...", "...", "..."},
-                {base + "^3", "...", "...", "...", "..."},
-                {base + "^4", "...", "...", "...", "..."},
-                {base + "^5", "...", "...", "...", "..."},
-                {base + "^6", "...", "...", "...", "..."}
+                {base + "^2", "...", "...", "...", "...", "..."},
+                {base + "^3", "...", "...", "...", "...", "..."},
+                {base + "^4", "...", "...", "...", "...", "..."},
+                {base + "^5", "...", "...", "...", "...", "..."},
+                {base + "^6", "...", "...", "...", "...", "..."}
         };
 
         //Store the counts of each method into cellsData
@@ -159,10 +220,12 @@ public class Main {
             cellsData[i][1] = Integer.toString(mcs_ON3(X));
             cellsData[i][2] = Integer.toString(mcs_ON2A(X));
             cellsData[i][3] = Integer.toString(mcs_ON2B(X));
-            cellsData[i][4] = Integer.toString(mcs_ON(X));
+            cellsData[i][4] = Integer.toString(mcsOnlogn(X, 0, N));
+            cellsData[i][5] = Integer.toString(mcs_ON(X));
+
         }
 
-        String[] columnNames = {"N", "O(n^3)", "O(n^2) A", "O(n^2) B", "O(n)"};
+        String[] columnNames = {"N", "O(n^3)", "O(n^2) A", "O(n^2) B", "O(nlog(n))", "O(n)"};
 
         DefaultTableModel model = new DefaultTableModel(cellsData, columnNames);
         JTable table = new JTable(model);
