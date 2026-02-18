@@ -127,8 +127,33 @@ public class Main {
             X[i] = x;
         }
 
-        System.out.println("Number of negative numbers in X: " + countNegative);
-        System.out.println("Number of positive numbers in X: " + countPositive);
+        //System.out.println("Number of negative numbers in X: " + countNegative);
+        //System.out.println("Number of positive numbers in X: " + countPositive + "\n");
         return X;
     }
+
+    public static void main(String[] args) {
+        int base = 2;
+
+        String[][] cellsData = {
+                {base + "²", "...", "...", "...", "..."},
+                {base + "³", "...", "...", "...", "..."},
+                {base + "⁴", "...", "...", "...", "..."},
+                {base + "⁵", "...", "...", "...", "..."},
+                {base + "⁶", "...", "...", "...", "..."}
+        };
+
+
+        for (int pow = 2; pow <= 6; pow++) {
+            int N = (int) Math.pow(base, pow);
+            int[] X = newArray(N);
+
+            int i = pow - 2;
+            cellsData[i][1] = Integer.toString(mcs_ON3(X));
+            cellsData[i][2] = Integer.toString(mcs_ON2A(X));
+            cellsData[i][3] = Integer.toString(mcs_ON2B(X));
+            cellsData[i][4] = Integer.toString(mcs_ON(X));
+        }
+    }
+
 }
