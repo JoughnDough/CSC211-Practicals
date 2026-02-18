@@ -7,6 +7,8 @@ import javax.swing.table.TableColumnModel;
 import java.util.Arrays;
 
 public class Main {
+    private static int countOlogN = 0;
+
     // O(n^3):
     private static int mcs_ON3(int[] X) {
         int n = X.length;
@@ -25,7 +27,7 @@ public class Main {
                 }
             }
         }
-
+        //return maxsofar;
         return count;
     }
 
@@ -48,7 +50,7 @@ public class Main {
                     maxsofar = sum;
             }
         }
-
+        //return maxsofar;
         return count;
     }
 
@@ -84,21 +86,16 @@ public class Main {
             }
         }
 
-
+        //return maxsofar;
         return count;
     }
 
     //Part of O(n log(n))
     private static int maxStraddle(int[] X, int low, int high){
-        if (low >= high)
-            return 0;
-        if (low == high)
-            return Math.max(0, X[low]);
-
-        int middle = (int) (low + high)/2;
+        int middle = (low + high)/2;
 
         int sum = 0;
-        int maxsofarLeft = 0;
+        int maxsofarLeft = Integer.MIN_VALUE;
 
         for (int i = middle;  i >= low; i--){
             sum += X[i];
@@ -107,46 +104,45 @@ public class Main {
                 maxsofarLeft = sum;
         }
 
-        int maxsofarRight = 0;
-        int N = X.length;
+        int maxsofarRight = Integer.MIN_VALUE;
+        sum = 0;
 
-        for (int i = middle + 1;  i <= high; i--){
-            if (i >= N)
-                break;
-
+        for (int i = middle + 1;  i <= high; i++){
             sum += X[i];
 
             if (sum > maxsofarRight)
                 maxsofarRight = sum;
         }
 
+        countOlogN++;
         return maxsofarLeft + maxsofarRight;
     }
     //O(n log(n))
     private static int mcsOnlogn(int[] X, int low, int high){
-        if (low >= high)
+        if (low > high) {
+            countOlogN++;
             return 0;
-        if (low == high -1) {
-            if (low == X.length)
-                return 0;
-            return  Math.max(0, X[low]);
+        }
+        if (low == high) {
+            return X[low];
         }
 
-        if (low == high - 2) {
+        if (low == high - 2){
             int sum = 0;
 
-            for (int i = 0;i<X.length;i++)
+            for (int i = low; i<= high; i++)
                 sum += X[i];
 
             return sum;
         }
 
-        int middle = (int) (low + high)/ 2;
+        int middle = (low + high)/ 2;
         int mLeft = mcsOnlogn(X, low, middle);
-        int  mRight = mcsOnlogn(X, middle+1, high);
+        int mRight = mcsOnlogn(X, middle+1, high);
         int mStraddle = maxStraddle(X, low, high);
 
-        //max(mLeft, mRight, mStraddle
+        countOlogN++;
+        //max(mLeft, mRight, mStraddle)
         return Math.max(Math.max(mLeft, mRight), mStraddle);
     }
     //O(n)
@@ -161,7 +157,7 @@ public class Main {
             maxSoFar = Math.max(maxSoFar, maxToHere);
             count++;
         }
-
+        //return maxSoFar;
         return count;
     }
 
@@ -199,8 +195,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //The application NEVER finishes termination at base = 10 because the datasets become so huge that we'd need to wait till the end of the universe to
-        int base = 2;
+        int base = 10;
 
         String[][] cellsData = {
                 {base + "^2", "...", "...", "...", "...", "..."},
@@ -220,7 +215,9 @@ public class Main {
             cellsData[i][1] = Integer.toString(mcs_ON3(X));
             cellsData[i][2] = Integer.toString(mcs_ON2A(X));
             cellsData[i][3] = Integer.toString(mcs_ON2B(X));
-            cellsData[i][4] = Integer.toString(mcsOnlogn(X, 0, N));
+            countOlogN = 0;
+            mcsOnlogn(X, 0, N-1);
+            cellsData[i][4] = Integer.toString(countOlogN);
             cellsData[i][5] = Integer.toString(mcs_ON(X));
 
         }
